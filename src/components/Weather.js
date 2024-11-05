@@ -1,6 +1,7 @@
 // src/components/Weather.js
 import React, { useState } from 'react';
 import '../styles/Weather.css';
+
 function Weather() {
   const [location, setLocation] = useState('');
   const [weather, setWeather] = useState(null);
@@ -33,6 +34,39 @@ function Weather() {
     }
   };
 
+  // Suggest travel based on the current weather conditions
+  const getTravelSuggestion = () => {
+    if (!weather) return '';
+
+    const { temp_c, condition, humidity, wind_kph, uv } = weather.current;
+    const { name, country } = weather.location;
+    let recommendation = '';
+
+    if (temp_c >= 30) {
+      recommendation = "It's quite hot! A beach destination like Goa or Maldives would be refreshing.";
+    } else if (temp_c <= 15) {
+      recommendation = "It’s cool out! A cozy mountain getaway in the Himalayas or Switzerland would be perfect.";
+    } else {
+      recommendation = "The temperature is comfortable, perfect for exploring nearby locations.";
+    }
+
+    if (condition.text.includes("Rain") || condition.text.includes("Thunder")) {
+      recommendation += " Since it's rainy, consider indoor attractions, like a city tour in Paris or New York.";
+    } else if (condition.text.includes("Clear")) {
+      recommendation += " The clear weather is great for outdoor adventures, like a safari in Kenya or hiking in the Rockies.";
+    }
+
+    if (country === "India" && condition.text.includes("Clear") && temp_c > 20) {
+      recommendation += " Perfect weather to explore Indian heritage sites, like Jaipur, Udaipur, or the Taj Mahal.";
+    }
+
+    if (name === "Salem") {
+      recommendation = "In Salem, explore Yercaud Hills, 1008 Lingam Temple, and Mettur Dam, or nearby heritage sites like Mahabalipuram and Mysore.";
+    }
+
+    return recommendation;
+  };
+
   return (
     <div className="weather">
       <input
@@ -59,6 +93,9 @@ function Weather() {
           <p><strong>Pressure:</strong> {weather.current.pressure_mb} mb</p>
           <p><strong>Visibility:</strong> {weather.current.vis_km} km</p>
           <p><strong>UV Index:</strong> {weather.current.uv}</p>
+
+          {/* Travel suggestion based on weather */}
+          <p className="travel-suggestion"><strong>Suggested Travel Destination:</strong> {getTravelSuggestion()}</p>
         </div>
       )}
     </div>
