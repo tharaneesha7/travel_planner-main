@@ -21,7 +21,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_HUB_REPO:latest .'
+                    sh 'docker build -t tharaneesh/final_prj:latest .'
                 }
             }
         }
