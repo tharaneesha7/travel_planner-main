@@ -15,6 +15,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 git url: 'https://github.com/tharaneesha7/travel_planner-main.git', branch: 'main'
+<<<<<<< HEAD
             }
         }
 
@@ -39,13 +40,19 @@ pipeline {
                 script {
                     sh 'npm run build'
                 }
+=======
+>>>>>>> 3d941ef56150d8aef4322d830b390d785cff6669
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
+<<<<<<< HEAD
                     sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+=======
+                    sh 'docker build -t tharaneesh/final_prj:latest .'
+>>>>>>> 3d941ef56150d8aef4322d830b390d785cff6669
                 }
             }
         }
