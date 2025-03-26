@@ -192,3 +192,16 @@ function App() {
 
 // Exporting the main App component
 export default App;
+
+// Adding a switch statement with a default case
+switch (someVariable) {
+  case 'value1':
+    // handle case
+    break;
+  case 'value2':
+    // handle case
+    break;
+  default:
+    // handle default case
+    break; // Add this default case
+}
