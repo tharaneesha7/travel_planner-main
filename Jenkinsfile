@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "nadinc/guvi_final_prj"
+        IMAGE_NAME = "tharaneesh/final_prj"
         TAG = "${BUILD_NUMBER}-${sh(script: 'date +%Y%m%d-%H%M%S', returnStdout: true).trim()}"
         CONTAINER_NAME = "jenkins-docker-container"
         PORT = "8080"
@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git url: 'https://github.com/nadin-c/ReactDevops.git', branch: 'main'
+                git url: 'https://github.com/tharaneesha7/travel_planner-main.git', branch: 'main'
             }
         }
 
