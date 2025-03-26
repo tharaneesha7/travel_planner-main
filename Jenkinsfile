@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "nadinc/guvi_final_prj"
+        IMAGE_NAME = "tharaneesh/final_prj"
         TAG = "${BUILD_NUMBER}-${sh(script: 'date +%Y%m%d-%H%M%S', returnStdout: true).trim()}"
         CONTAINER_NAME = "jenkins-docker-container"
         PORT = "8080"
-        DOCKER_CREDENTIALS = credentials('docker-hub-creds')
+        DOCKER_CREDENTIALS_ID = 'docker-hub-creds'
         NODE_ENV = 'production'
         BUILD_OUTPUT_DIR = 'build'
     }
@@ -14,14 +14,38 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git url: 'https://github.com/nadin-c/ReactDevops.git', branch: 'main'
+                git url: 'https://github.com/tharaneesha7/travel_planner-main.git', branch: 'main'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                script {
+                    sh 'npm run build'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_HUB_REPO:latest .'
+                    sh "docker build -t ${IMAGE_NAME}:${TAG} ."
                 }
             }
         }
@@ -39,7 +63,9 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    sh 'docker push $DOCKER_HUB_REPO:latest'
+                    sh "docker push ${IMAGE_NAME}:${TAG}"
+                    sh "docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest"
+                    sh "docker push ${IMAGE_NAME}:latest"
                 }
             }
         }
@@ -48,7 +74,7 @@ pipeline {
     post {
         success {
             echo 'Pipeline succeeded!'
-            echo 'Docker image pushed to Docker Hub!'
+            echo "Docker image pushed: ${IMAGE_NAME}:${TAG}"
         }
         failure {
             echo 'Pipeline failed!'
